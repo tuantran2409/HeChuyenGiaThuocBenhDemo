@@ -30,11 +30,12 @@ This is a university Software Engineering project (CNPM) requiring full SDLC art
 
 ## Current State
 
-**Active branch:** `feature/sprint3-admin-patient` (pushed, PR open → develop)
+**Active branch:** `feature/sprint4-reports` (pushed, PR open → develop)
 
 **Sprint 1 — COMPLETE** ✅ (branch `feature/sprint1-setup`, pushed, PR open → develop)
 **Sprint 2 — COMPLETE** ✅ (branch `feature/sprint2-inference`, pushed, PR open → develop)
 **Sprint 3 — COMPLETE** ✅ (branch `feature/sprint3-admin-patient`, pushed, PR open → develop)
+**Sprint 4 — COMPLETE** ✅ (branch `feature/sprint4-reports`, pushed, PR open → develop)
 
 ### Solution structure
 
@@ -52,18 +53,23 @@ HeChuyenGiaThuocBenh/
 │   │   └── Repositories/
 │   │       ├── BenhRepository.cs   ← Sprint 3: +SaveBenhTrieuChungAsync
 │   │       └── IBenhRepository.cs  ← Sprint 3: +SaveBenhTrieuChungAsync
-│   ├── HeChuyenGiaThuocBenh.BLL/           ← unchanged from Sprint 2
+│   ├── HeChuyenGiaThuocBenh.BLL/
+│   │   └── Services/
+│   │       ├── BaoCaoService.cs    ← Sprint 4: QuestPDF report
+│   │       └── IBaoCaoService.cs   ← Sprint 4
 │   └── HeChuyenGiaThuocBenh.UI/
 │       ├── Program.cs
 │       ├── appsettings.json        ← Server=localhost\\SQLEXPRESS ✅
 │       └── Forms/
 │           ├── LoginForm.cs + Designer         ← Sprint 1
-│           ├── MainForm.cs + Designer          ← Sprint 1+2+3
+│           ├── MainForm.cs + Designer          ← Sprint 1+2+3+4
 │           ├── ChanDoanForm.cs + Designer      ← Sprint 2
 │           ├── ThuocForm.cs + Designer         ← Sprint 2
-│           ├── BenhNhanForm.cs + Designer      ← Sprint 3 ✅ NEW
-│           ├── AdminThuocForm.cs + Designer    ← Sprint 3 ✅ NEW
-│           └── AdminBenhForm.cs + Designer     ← Sprint 3 ✅ NEW
+│           ├── BenhNhanForm.cs + Designer      ← Sprint 3 ✅
+│           ├── AdminThuocForm.cs + Designer    ← Sprint 3 ✅
+│           ├── AdminBenhForm.cs + Designer     ← Sprint 3 ✅
+│           ├── BaoCaoForm.cs + Designer        ← Sprint 4 ✅ NEW
+│           └── AdminUserForm.cs + Designer     ← Sprint 4 ✅ NEW
 └── tests/
     ├── HeChuyenGiaThuocBenh.Tests.Unit/        ← empty, Sprint 5
     └── HeChuyenGiaThuocBenh.Tests.Integration/ ← empty, Sprint 5
@@ -182,23 +188,46 @@ HeChuyenGiaThuocBenh/
 
 ---
 
-### Sprint 4 — Báo cáo + Admin dashboard
+### Sprint 4 — Báo cáo + Admin dashboard ✅ COMPLETE
 
 **Epic: Báo cáo & thống kê (SV4)**
 | Type | Task | Status |
 |---|---|---|
-| Story | Xuất báo cáo PDF | 🔲 QuestPDF — `BaoCaoService.cs` + form |
-| Story | Xem thống kê chẩn đoán | 🔲 LiveCharts — biểu đồ theo thời gian |
-| Task | API xuất báo cáo | 🔲 `BaoCaoService.XuatPDF` |
-| Task | Thiết kế màn hình báo cáo | 🔲 `BaoCaoForm.cs` với chart + export btn |
+| Story | Xuất báo cáo PDF | ✅ `BaoCaoService.cs` + `BaoCaoForm.cs` |
+| Story | Xem thống kê chẩn đoán | ✅ LiveCharts ColumnSeries — biểu đồ theo ngày |
+| Task | API xuất báo cáo | ✅ `BaoCaoService.XuatPDFAsync` QuestPDF |
+| Task | Thiết kế màn hình báo cáo | ✅ `BaoCaoForm` — DatePicker + chart + DGV + export |
 
 **Epic: Xác thực & phân quyền — Admin (SV1)**
 | Type | Task | Status |
 |---|---|---|
-| Story | Quản lý người dùng (admin) | 🔲 `AdminUserForm.cs` — CRUD Users |
-| Task | Thiết kế màn hình dashboard admin | 🔲 Panel admin trong MainForm |
+| Story | Quản lý người dùng (admin) | ✅ `AdminUserForm.cs` — CRUD Users |
+| Task | Thiết kế màn hình dashboard admin | ✅ AdminUserForm wired via btnAdminUsers in MainForm |
 
-**Sprint 4 total: 6 tasks — tất cả 🔲 TODO**
+**Sprint 4 total: 6 tasks — tất cả ✅ Done**
+
+### Sprint 4 — what was built
+
+**BaoCaoForm:**
+- Top bar: `Từ ngày` + `Đến ngày` DateTimePickers + `🔍 Tìm kiếm` + `📄 Xuất PDF` (disabled until data loaded)
+- Middle: LiveCharts `CartesianChart` — `ColumnSeries<int>` grouped by day
+- Bottom: DataGridView of `LichSuChanDoan` records in range
+- PDF: `SaveFileDialog` → `BaoCaoService.XuatPDFAsync` → QuestPDF document with summary table + per-day table + detail table
+
+**BaoCaoService (BLL):**
+- `GetThongKeAsync(from, to)` → `LichSuChanDoanRepository.GetByDateRangeAsync` (full-day inclusive)
+- `XuatPDFAsync(from, to, data, outputPath)` → QuestPDF Community license, A4 page, header + overview + per-day stats + detail table
+
+**AdminUserForm (admin only):**
+- Left: DataGridView (Id, Username, HoTen, Email, VaiTro, TrangThai)
+- Top buttons: `+ Thêm mới` + `🔒 Bật/Tắt` (toggle IsActive with confirmation)
+- Right: form (Username readonly when editing, HoTen, Email, Role ComboBox, IsActive checkbox, Password field)
+- `💾 Lưu`: create new user with BCrypt hash, or update existing (HoTen/Email/Role/Active + optional password change)
+- `🔑 Reset mật khẩu`: resets to `Admin@123` (with confirmation)
+- Cannot deactivate own account
+
+**DAL additions:**
+- `IUserRepository` + `UserRepository`: `+ResetPasswordAsync(id, newHash)`
 
 ---
 
@@ -228,9 +257,9 @@ HeChuyenGiaThuocBenh/
 | Sprint 1 | 21 | 18 ✅ | 3 |
 | Sprint 2 | 22 | 22 ✅ | 0 |
 | Sprint 3 | 13 | 13 ✅ | 0 |
-| Sprint 4 | 6 | 0 | 6 |
+| Sprint 4 | 6 | 6 ✅ | 0 |
 | Sprint 5 | 9 | 0 | 9 |
-| **Total** | **71** | **53** | **18** |
+| **Total** | **71** | **59** | **12** |
 
 ---
 
@@ -270,14 +299,14 @@ dotnet run --project src/HeChuyenGiaThuocBenh.UI
 - **Form embedding:** `MainForm.ShowContentForm(Form)` sets `TopLevel=false`, `FormBorderStyle=None`, `Dock=Fill` before adding to `pnlContent`. All content forms use this pattern.
 - **Drug interaction warnings:** Inline in ChanDoanForm results (not a separate dialog). Color: green panel = no warnings, red panel = warnings with severity coloring (DarkRed/DarkGoldenrod/DarkGreen).
 - **Rule editor (SaveBenhTrieuChungAsync):** Transactional full-replace — DELETE all existing BenhTrieuChung for a disease, then INSERT new set. Single transaction, rollback on error.
-- **Admin-only forms:** `AdminThuocForm` + `AdminBenhForm` only accessible via sidebar buttons hidden from non-admin roles (`ApplyUserContext()` in MainForm).
+- **Admin-only forms:** `AdminThuocForm` + `AdminBenhForm` + `AdminUserForm` only accessible via sidebar buttons hidden from non-admin roles (`ApplyUserContext()` in MainForm).
+- **QuestPDF:** `LicenseType.Community` set in `BaoCaoService.XuatPDFAsync` before document creation.
+- **BaoCaoService date range:** `GetThongKeAsync` passes `from.Date` and `to.Date.AddDays(1).AddTicks(-1)` to make range fully inclusive.
 
 ---
 
-## Not Yet Done (Sprint 4-5)
+## Not Yet Done (Sprint 5)
 
-- [ ] Sprint 4: `BaoCaoForm` (LiveCharts stats dashboard, QuestPDF export)
-- [ ] Sprint 4: `AdminUserForm` (admin CRUD for Users)
 - [ ] Sprint 5: Unit tests for InferenceService, AuthService
 - [ ] Sprint 5: Integration tests (real DB — symptom → diagnosis → drug flow)
 - [ ] Sprint 5: 20+ manual UI test cases documented
@@ -287,9 +316,11 @@ dotnet run --project src/HeChuyenGiaThuocBenh.UI
 
 ## Next Step
 
-**Start Sprint 4:** Create `feature/sprint4-reports` branch off `develop` (after Sprint 3 PR merges), build:
-1. `BaoCaoForm` — LiveCharts stats dashboard (biểu đồ chẩn đoán theo thời gian) + QuestPDF export button
-2. `AdminUserForm` — admin CRUD for Users (DataGridView + add/edit/deactivate, role ComboBox)
+**Start Sprint 5:** Create `feature/sprint5-tests` branch off `develop` (after Sprint 4 PR merges), build:
+1. Unit tests — `InferenceService` (forward chaining logic), `AuthService` (BCrypt verify)
+2. Integration tests — full flow: symptom input → inference → drug recommendations (real DB)
+3. 20+ manual UI test cases (`docs/test-cases.md`)
+4. `dotnet publish` packaging + deployment (Docker + SQL Server or VPS)
 
 ---
 
@@ -297,15 +328,17 @@ dotnet run --project src/HeChuyenGiaThuocBenh.UI
 
 ```
 main                          ← initial commit only
-develop                       ← initial commit only (Sprint 1+2+3 PRs pending merge)
+develop                       ← initial commit only (Sprint 1+2+3+4 PRs pending merge)
 feature/sprint1-setup         ← Sprint 1 complete, pushed, PR open → develop
 feature/sprint2-inference     ← Sprint 2 complete, pushed, PR open → develop
-feature/sprint3-admin-patient ← Sprint 3 complete, pushed, PR open → develop (HEAD)
+feature/sprint3-admin-patient ← Sprint 3 complete, pushed, PR open → develop
+feature/sprint4-reports       ← Sprint 4 complete, pushed, PR open → develop (HEAD)
 ```
 
 **PRs open (create via GitHub UI):**
 - Sprint 1: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint1-setup
 - Sprint 2: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint2-inference
 - Sprint 3: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint3-admin-patient
+- Sprint 4: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint4-reports
 
 **`gh` CLI:** installed at `C:\Program Files\GitHub CLI\gh.exe` but needs `gh auth login` before `gh pr create` works.
