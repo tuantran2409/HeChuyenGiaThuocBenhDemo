@@ -30,11 +30,12 @@ This is a university Software Engineering project (CNPM) requiring full SDLC art
 
 ## Current State
 
-**Active branch:** `feature/sprint2-inference` (committed + pushed)
+**Active branch:** `feature/sprint4-reports` (pushed, PR open → develop)
 
-**Sprint 1 — COMPLETE** ✅ (branch `feature/sprint1-setup`, pushed, PR open to develop)
-**Sprint 2 — COMPLETE** ✅ (branch `feature/sprint2-inference`, pushed, PR open to develop)
-**Sprint 3 — COMPLETE** ✅ (branch `feature/sprint3-admin-patient`, committed)
+**Sprint 1 — COMPLETE** ✅ (branch `feature/sprint1-setup`, pushed, PR open → develop)
+**Sprint 2 — COMPLETE** ✅ (branch `feature/sprint2-inference`, pushed, PR open → develop)
+**Sprint 3 — COMPLETE** ✅ (branch `feature/sprint3-admin-patient`, pushed, PR open → develop)
+**Sprint 4 — COMPLETE** ✅ (branch `feature/sprint4-reports`, pushed, PR open → develop)
 
 ### Solution structure
 
@@ -43,54 +44,71 @@ HeChuyenGiaThuocBenh/
 ├── HeChuyenGiaThuocBenh.slnx
 ├── docs/
 │   └── database/
-│       ├── schema.sql          ← 8 tables + indexes — READY TO RUN
-│       └── seed_data.sql       ← real BCrypt hashes ✅ FIXED
+│       ├── schema.sql              ← 8 tables + indexes — READY TO RUN
+│       ├── seed_data.sql           ← real BCrypt hashes ✅
+│       └── fix_seed_passwords.sql  ← helper script (already applied)
 ├── src/
 │   ├── HeChuyenGiaThuocBenh.Models/        ← unchanged from Sprint 1
-│   ├── HeChuyenGiaThuocBenh.DAL/           ← unchanged from Sprint 1
-│   ├── HeChuyenGiaThuocBenh.BLL/           ← unchanged from Sprint 1
+│   ├── HeChuyenGiaThuocBenh.DAL/
+│   │   └── Repositories/
+│   │       ├── BenhRepository.cs   ← Sprint 3: +SaveBenhTrieuChungAsync
+│   │       └── IBenhRepository.cs  ← Sprint 3: +SaveBenhTrieuChungAsync
+│   ├── HeChuyenGiaThuocBenh.BLL/
+│   │   └── Services/
+│   │       ├── BaoCaoService.cs    ← Sprint 4: QuestPDF report
+│   │       └── IBaoCaoService.cs   ← Sprint 4
 │   └── HeChuyenGiaThuocBenh.UI/
 │       ├── Program.cs
-│       ├── appsettings.json    ← Server=localhost\\SQLEXPRESS ✅ FIXED
+│       ├── appsettings.json        ← Server=localhost\\SQLEXPRESS ✅
 │       └── Forms/
-│           ├── LoginForm.cs + Designer         ← Sprint 1, DONE
-│           ├── MainForm.cs + Designer          ← Sprint 1+2, ShowContentForm added
-│           ├── ChanDoanForm.cs + Designer      ← Sprint 2 ✅ NEW
-│           └── ThuocForm.cs + Designer         ← Sprint 2 ✅ NEW
+│           ├── LoginForm.cs + Designer         ← Sprint 1
+│           ├── MainForm.cs + Designer          ← Sprint 1+2+3+4
+│           ├── ChanDoanForm.cs + Designer      ← Sprint 2
+│           ├── ThuocForm.cs + Designer         ← Sprint 2
+│           ├── BenhNhanForm.cs + Designer      ← Sprint 3 ✅
+│           ├── AdminThuocForm.cs + Designer    ← Sprint 3 ✅
+│           ├── AdminBenhForm.cs + Designer     ← Sprint 3 ✅
+│           ├── BaoCaoForm.cs + Designer        ← Sprint 4 ✅ NEW
+│           └── AdminUserForm.cs + Designer     ← Sprint 4 ✅ NEW
 └── tests/
-    ├── HeChuyenGiaThuocBenh.Tests.Unit/       ← empty, Sprint 5
+    ├── HeChuyenGiaThuocBenh.Tests.Unit/        ← empty, Sprint 5
     └── HeChuyenGiaThuocBenh.Tests.Integration/ ← empty, Sprint 5
 ```
 
-### Sprint 2 — what was built
+### Sprint 3 — what was built
 
-**ChanDoanForm:**
-- Left panel: symptom CheckedListBox grouped by NhomTrieuChung, real-time search filter, selected count
-- "Chẩn đoán" button calls `InferenceService.ChanDoanAsync(selectedIds)`
-- Results DataGridView: disease name, group, confidence % (color-coded green/orange/red), drug count, warning count
-- Detail panel (shows on row select): disease info, recommended drugs DataGridView, drug interaction warning panel (green=none, red=warnings with severity)
+**BenhNhanForm:**
+- Left: patient DataGridView with search (họ tên / số điện thoại)
+- Action bar: `+ Thêm mới` + `💾 Lưu` buttons
+- Tab 1 "Thông tin bệnh nhân": editable fields (HoTen, NgaySinh DateTimePicker, GioiTinh ComboBox, SoDienThoai, DiaChi, TienSuBenh multiline, DiUng multiline)
+- Tab 2 "Lịch sử chẩn đoán": DataGridView of `LichSuChanDoan` for selected patient
 
-**ThuocForm:**
-- Top bar: keyword search + NhomThuoc dropdown filter
-- Left: drug DataGridView (multi-select for interaction check)
-- Right detail: drug fields (hoạt chất, nhóm, liều dùng, cách dùng), contraindications (red), side effects (orange)
-- Drug interaction checker: select 2+ drugs → click button → calls `TuongTacThuocRepository.CheckMultipleInteractionsAsync`
+**AdminThuocForm (admin only):**
+- Top bar: search + NhomThuoc filter + `+ Thêm mới` + `🗑 Xóa` buttons
+- Left: drug DataGridView
+- Right: editable form (Ten, HoatChat, NhomThuoc, LieuDung, CachDung, ChongChiDinh multiline red, TacDungPhu multiline orange, MoTa, IsActive checkbox) + `💾 Lưu`
 
-**MainForm changes:**
-- `ShowContentForm(Form)` helper: embeds child form into `pnlContent` (TopLevel=false, Dock=Fill)
-- `btnChanDoan` → `ChanDoanForm`
-- `btnThuoc` → `ThuocForm`
+**AdminBenhForm (admin only):**
+- Left: disease list with search + `+ Thêm bệnh` + `🗑 Xóa` buttons
+- Tab 1 "Thông tin bệnh": Ten, NhomBenh, MoTa, IsActive + `💾 Lưu bệnh`
+- Tab 2 "Tập luật": editable DataGridView (ComboBox→TrieuChung, TrongSo decimal, BatBuoc checkbox) + `+ Thêm luật` / `Xóa luật` / `💾 Lưu tập luật`
+- `SaveBenhTrieuChungAsync`: transactional DELETE + INSERT replacing all rules for disease
 
-### DB seed data coverage (unchanged)
+**MainForm changes (Sprint 3):**
+- `btnBenhNhan` → `BenhNhanForm`
+- `btnAdminDrugs` → `AdminThuocForm`
+- `btnAdminDiseases` → `AdminBenhForm`
+
+### DB seed data coverage
 
 - 50 symptoms (TrieuChung) grouped by body system
 - 100+ drugs (Thuoc) across 10 drug classes
 - 40 diseases (Benh) with NhomBenh categories
-- BenhTrieuChung rules for 12 diseases (inference rules with TrongSo weights + BatBuoc flags)
+- BenhTrieuChung rules for 12 diseases (TrongSo weights + BatBuoc flags)
 - BenhThuoc treatment mappings for 10 diseases
 - 12 drug interaction pairs (TuongTacThuoc) with severity levels
 - 5 sample patients (BenhNhan)
-- 4 seed users (admin/bacsi1/bacsi2/duocsi1) — **password hashes are REAL** ✅
+- 4 seed users (admin/bacsi1/bacsi2/duocsi1) — **real BCrypt hashes** ✅
 
 ### Seed user credentials
 
@@ -123,7 +141,7 @@ HeChuyenGiaThuocBenh/
 
 | Task | Status |
 |---|---|
-| Engine suy luận forward chaining | ✅ InferenceService (Sprint 1) + ChanDoanForm (Sprint 2) |
+| Engine suy luận forward chaining | ✅ InferenceService + ChanDoanForm |
 | Tập luật IF-THEN | ✅ seed_data.sql BenhTrieuChung |
 | Form nhập triệu chứng | ✅ ChanDoanForm — CheckedListBox + search |
 | Màn hình kết quả chẩn đoán | ✅ dgvKetQua + pnlDetail |
@@ -132,61 +150,84 @@ HeChuyenGiaThuocBenh/
 | Tìm kiếm thuốc | ✅ ThuocForm — keyword + nhóm filter |
 | Xem chi tiết thuốc | ✅ ThuocForm detail panel |
 | Kiểm tra tương tác nhiều thuốc | ✅ ThuocForm multi-select + DGV |
-| Kết nối FE-BE tất cả | ✅ MainForm.ShowContentForm wires everything |
+| Kết nối FE-BE tất cả | ✅ MainForm.ShowContentForm |
 
 **22 tasks — tất cả ✅ Done**
 
 ---
 
-### Sprint 3 — Admin CRUD + Hồ sơ bệnh nhân
+### Sprint 3 — Admin CRUD + Hồ sơ bệnh nhân ✅ COMPLETE
 
 **Epic: Cơ sở tri thức thuốc — Admin (SV3)**
 | Type | Task | Status |
 |---|---|---|
-| Story | Thêm/sửa/xóa thuốc (admin) | 🔲 Tạo `AdminThuocForm.cs` |
-| Task | API CRUD thuốc | 🔲 `ThuocRepository` done — cần form |
-| Task | Thiết kế màn hình chi tiết thuốc | 🔲 `ThuocDetailForm.cs` |
-| Task | Thiết kế màn hình tìm kiếm thuốc | 🔲 dùng chung ThuocForm Sprint 2 |
+| Story | Thêm/sửa/xóa thuốc (admin) | ✅ `AdminThuocForm.cs` |
+| Task | API CRUD thuốc | ✅ `ThuocRepository` + form wired |
+| Task | Thiết kế màn hình chi tiết thuốc | ✅ right panel in AdminThuocForm |
+| Task | Thiết kế màn hình tìm kiếm thuốc | ✅ shared ThuocForm (Sprint 2) |
 
 **Epic: Cơ sở tri thức bệnh — Admin (SV3)**
 | Type | Task | Status |
 |---|---|---|
-| Story | Thêm/sửa/xóa bệnh (admin) | 🔲 Tạo `AdminBenhForm.cs` |
-| Story | Xem danh sách bệnh | 🔲 Tạo `BenhListForm.cs` |
-| Task | API CRUD bệnh | 🔲 `BenhRepository` done — cần form |
-| Task | Thiết kế màn hình danh sách bệnh | 🔲 `BenhListForm.cs` |
+| Story | Thêm/sửa/xóa bệnh (admin) | ✅ `AdminBenhForm.cs` |
+| Story | Xem danh sách bệnh | ✅ left DGV in AdminBenhForm |
+| Task | API CRUD bệnh | ✅ `BenhRepository` + form wired |
+| Task | Thiết kế màn hình danh sách bệnh | ✅ left DGV in AdminBenhForm |
 
 **Epic: Quản lý hồ sơ bệnh nhân (SV4)**
 | Type | Task | Status |
 |---|---|---|
-| Story | Tạo hồ sơ bệnh nhân | 🔲 Tạo `BenhNhanForm.cs` |
-| Story | Xem lịch sử chẩn đoán | 🔲 Tab lịch sử trong BenhNhanForm |
-| Task | API CRUD hồ sơ bệnh nhân | 🔲 `BenhNhanRepository` done — cần form |
-| Task | Thiết kế màn hình hồ sơ bệnh nhân | 🔲 `BenhNhanForm.cs` |
-| Task | Kết nối FE-BE: bệnh nhân | 🔲 Wire BenhNhanForm → BenhNhanRepository |
+| Story | Tạo hồ sơ bệnh nhân | ✅ `BenhNhanForm.cs` |
+| Story | Xem lịch sử chẩn đoán | ✅ Tab 2 in BenhNhanForm |
+| Task | API CRUD hồ sơ bệnh nhân | ✅ `BenhNhanRepository` + form wired |
+| Task | Thiết kế màn hình hồ sơ bệnh nhân | ✅ BenhNhanForm |
+| Task | Kết nối FE-BE: bệnh nhân | ✅ MainForm.btnBenhNhan → BenhNhanForm |
 | Story | Xem chi tiết thuốc | ✅ ThuocForm Sprint 2 |
 
 **Sprint 3 total: 13 tasks — tất cả ✅ Done**
 
 ---
 
-### Sprint 4 — Báo cáo + Admin dashboard
+### Sprint 4 — Báo cáo + Admin dashboard ✅ COMPLETE
 
 **Epic: Báo cáo & thống kê (SV4)**
 | Type | Task | Status |
 |---|---|---|
-| Story | Xuất báo cáo PDF | 🔲 QuestPDF — `BaoCaoService.cs` + form |
-| Story | Xem thống kê chẩn đoán | 🔲 LiveCharts — biểu đồ theo thời gian |
-| Task | API xuất báo cáo | 🔲 `BaoCaoService.XuatPDF` |
-| Task | Thiết kế màn hình báo cáo | 🔲 `BaoCaoForm.cs` với chart + export btn |
+| Story | Xuất báo cáo PDF | ✅ `BaoCaoService.cs` + `BaoCaoForm.cs` |
+| Story | Xem thống kê chẩn đoán | ✅ LiveCharts ColumnSeries — biểu đồ theo ngày |
+| Task | API xuất báo cáo | ✅ `BaoCaoService.XuatPDFAsync` QuestPDF |
+| Task | Thiết kế màn hình báo cáo | ✅ `BaoCaoForm` — DatePicker + chart + DGV + export |
 
 **Epic: Xác thực & phân quyền — Admin (SV1)**
 | Type | Task | Status |
 |---|---|---|
-| Story | Quản lý người dùng (admin) | 🔲 `AdminUserForm.cs` — CRUD Users |
-| Task | Thiết kế màn hình dashboard admin | 🔲 Panel admin trong MainForm |
+| Story | Quản lý người dùng (admin) | ✅ `AdminUserForm.cs` — CRUD Users |
+| Task | Thiết kế màn hình dashboard admin | ✅ AdminUserForm wired via btnAdminUsers in MainForm |
 
-**Sprint 4 total: 6 tasks — tất cả 🔲 TODO**
+**Sprint 4 total: 6 tasks — tất cả ✅ Done**
+
+### Sprint 4 — what was built
+
+**BaoCaoForm:**
+- Top bar: `Từ ngày` + `Đến ngày` DateTimePickers + `🔍 Tìm kiếm` + `📄 Xuất PDF` (disabled until data loaded)
+- Middle: LiveCharts `CartesianChart` — `ColumnSeries<int>` grouped by day
+- Bottom: DataGridView of `LichSuChanDoan` records in range
+- PDF: `SaveFileDialog` → `BaoCaoService.XuatPDFAsync` → QuestPDF document with summary table + per-day table + detail table
+
+**BaoCaoService (BLL):**
+- `GetThongKeAsync(from, to)` → `LichSuChanDoanRepository.GetByDateRangeAsync` (full-day inclusive)
+- `XuatPDFAsync(from, to, data, outputPath)` → QuestPDF Community license, A4 page, header + overview + per-day stats + detail table
+
+**AdminUserForm (admin only):**
+- Left: DataGridView (Id, Username, HoTen, Email, VaiTro, TrangThai)
+- Top buttons: `+ Thêm mới` + `🔒 Bật/Tắt` (toggle IsActive with confirmation)
+- Right: form (Username readonly when editing, HoTen, Email, Role ComboBox, IsActive checkbox, Password field)
+- `💾 Lưu`: create new user with BCrypt hash, or update existing (HoTen/Email/Role/Active + optional password change)
+- `🔑 Reset mật khẩu`: resets to `Admin@123` (with confirmation)
+- Cannot deactivate own account
+
+**DAL additions:**
+- `IUserRepository` + `UserRepository`: `+ResetPasswordAsync(id, newHash)`
 
 ---
 
@@ -216,9 +257,9 @@ HeChuyenGiaThuocBenh/
 | Sprint 1 | 21 | 18 ✅ | 3 |
 | Sprint 2 | 22 | 22 ✅ | 0 |
 | Sprint 3 | 13 | 13 ✅ | 0 |
-| Sprint 4 | 6 | 0 | 6 |
+| Sprint 4 | 6 | 6 ✅ | 0 |
 | Sprint 5 | 9 | 0 | 9 |
-| **Total** | **71** | **53** | **18** |
+| **Total** | **71** | **59** | **12** |
 
 ---
 
@@ -232,6 +273,7 @@ HeChuyenGiaThuocBenh/
 | `dotnet sln HeChuyenGiaThuocBenh.sln add ...` | `HeChuyenGiaThuocBenh.sln` not found — dotnet 10 creates `.slnx` not `.sln`. Used `dotnet sln add` from root (no filename arg) instead. |
 | Connection string `Server=localhost` | SQL Server Express runs as `localhost\SQLEXPRESS` — must use double backslash in JSON: `localhost\\SQLEXPRESS`. |
 | BCrypt hashes in seed_data.sql | Were placeholders — regenerated with workFactor=11. Real hashes now in seed_data.sql. |
+| `gh pr create` (Bash tool) | `gh` not on PATH in Bash. Use PowerShell: `& "C:\Program Files\GitHub CLI\gh.exe" pr create ...` — but also needs `gh auth login` first. Fallback: create PR via GitHub UI URL. |
 
 ---
 
@@ -240,7 +282,7 @@ HeChuyenGiaThuocBenh/
 1. Open SQL Server Management Studio → connect to `localhost\SQLEXPRESS`
 2. Run `docs/database/schema.sql` (drops + recreates DB)
 3. Run `docs/database/seed_data.sql` (inserts all reference data + real password hashes)
-4. Verify: `SELECT TenDangNhap FROM Users` → should show 4 rows
+4. Verify: `SELECT Username FROM Users` → should show 4 rows
 
 Then run:
 ```
@@ -256,16 +298,15 @@ dotnet run --project src/HeChuyenGiaThuocBenh.UI
 - **ServiceContainer:** Manual DI (no Microsoft.Extensions.DI) to keep WinForms simple.
 - **Form embedding:** `MainForm.ShowContentForm(Form)` sets `TopLevel=false`, `FormBorderStyle=None`, `Dock=Fill` before adding to `pnlContent`. All content forms use this pattern.
 - **Drug interaction warnings:** Inline in ChanDoanForm results (not a separate dialog). Color: green panel = no warnings, red panel = warnings with severity coloring (DarkRed/DarkGoldenrod/DarkGreen).
+- **Rule editor (SaveBenhTrieuChungAsync):** Transactional full-replace — DELETE all existing BenhTrieuChung for a disease, then INSERT new set. Single transaction, rollback on error.
+- **Admin-only forms:** `AdminThuocForm` + `AdminBenhForm` + `AdminUserForm` only accessible via sidebar buttons hidden from non-admin roles (`ApplyUserContext()` in MainForm).
+- **QuestPDF:** `LicenseType.Community` set in `BaoCaoService.XuatPDFAsync` before document creation.
+- **BaoCaoService date range:** `GetThongKeAsync` passes `from.Date` and `to.Date.AddDays(1).AddTicks(-1)` to make range fully inclusive.
 
 ---
 
-## Not Yet Done (Sprint 3-5)
+## Not Yet Done (Sprint 5)
 
-- [ ] Sprint 3: `BenhNhanForm` (create/search patients, view diagnosis history tab)
-- [ ] Sprint 3: `AdminThuocForm` (admin CRUD for Thuoc — DataGridView + add/edit/delete buttons)
-- [ ] Sprint 3: `AdminBenhForm` / `BenhListForm` (admin CRUD for Benh + BenhTrieuChung rules editor)
-- [ ] Sprint 4: `BaoCaoForm` (LiveCharts stats dashboard, QuestPDF export)
-- [ ] Sprint 4: `AdminUserForm` (admin CRUD for Users)
 - [ ] Sprint 5: Unit tests for InferenceService, AuthService
 - [ ] Sprint 5: Integration tests (real DB — symptom → diagnosis → drug flow)
 - [ ] Sprint 5: 20+ manual UI test cases documented
@@ -275,9 +316,11 @@ dotnet run --project src/HeChuyenGiaThuocBenh.UI
 
 ## Next Step
 
-**Start Sprint 4:** Push + PR Sprint 3 to develop, then create `feature/sprint4-reports` branch, build:
-1. `BaoCaoForm` — LiveCharts stats dashboard + QuestPDF export button
-2. `AdminUserForm` — admin CRUD for Users (DataGridView + add/edit/deactivate)
+**Start Sprint 5:** Create `feature/sprint5-tests` branch off `develop` (after Sprint 4 PR merges), build:
+1. Unit tests — `InferenceService` (forward chaining logic), `AuthService` (BCrypt verify)
+2. Integration tests — full flow: symptom input → inference → drug recommendations (real DB)
+3. 20+ manual UI test cases (`docs/test-cases.md`)
+4. `dotnet publish` packaging + deployment (Docker + SQL Server or VPS)
 
 ---
 
@@ -285,14 +328,17 @@ dotnet run --project src/HeChuyenGiaThuocBenh.UI
 
 ```
 main                          ← initial commit only
-develop                       ← initial commit only (Sprint 1 + 2 PRs pending merge)
+develop                       ← initial commit only (Sprint 1+2+3+4 PRs pending merge)
 feature/sprint1-setup         ← Sprint 1 complete, pushed, PR open → develop
 feature/sprint2-inference     ← Sprint 2 complete, pushed, PR open → develop
-feature/sprint3-admin-patient ← Sprint 3 complete, committed (HEAD) — push + PR pending
+feature/sprint3-admin-patient ← Sprint 3 complete, pushed, PR open → develop
+feature/sprint4-reports       ← Sprint 4 complete, pushed, PR open → develop (HEAD)
 ```
 
-**PRs open (create via GitHub UI or `gh pr create`):**
+**PRs open (create via GitHub UI):**
 - Sprint 1: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint1-setup
 - Sprint 2: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint2-inference
+- Sprint 3: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint3-admin-patient
+- Sprint 4: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint4-reports
 
-**`gh` CLI installed** ✅ (`winget install GitHub.cli` — done). PRs now created automatically after each push.
+**`gh` CLI:** installed at `C:\Program Files\GitHub CLI\gh.exe` but needs `gh auth login` before `gh pr create` works.

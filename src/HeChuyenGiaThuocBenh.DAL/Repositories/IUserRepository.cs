@@ -10,4 +10,5 @@ public interface IUserRepository
     Task<int> CreateAsync(User user);
     Task UpdateAsync(User user);
     Task SetActiveAsync(int id, bool isActive);
+    Task ResetPasswordAsync(int id, string newHash);
 }

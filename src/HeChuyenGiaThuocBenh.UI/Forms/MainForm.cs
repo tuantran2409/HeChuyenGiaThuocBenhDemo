@@ -65,12 +65,11 @@ public partial class MainForm : Form
     private void btnBenhNhan_Click(object sender, EventArgs e)
         => ShowContentForm(new BenhNhanForm());
 
-    // Sprint 4
     private void btnBaoCao_Click(object sender, EventArgs e)
-        => MessageBox.Show("Chức năng báo cáo — Sprint 4", "Thông báo");
+        => ShowContentForm(new BaoCaoForm());
 
     private void btnAdminUsers_Click(object sender, EventArgs e)
-        => MessageBox.Show("Quản lý người dùng — Sprint 4", "Thông báo");
+        => ShowContentForm(new AdminUserForm());
 
     private void btnAdminDrugs_Click(object sender, EventArgs e)
         => ShowContentForm(new AdminThuocForm());

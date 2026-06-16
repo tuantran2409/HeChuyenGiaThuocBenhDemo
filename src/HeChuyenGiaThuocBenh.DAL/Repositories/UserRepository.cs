@@ -60,4 +60,12 @@ public class UserRepository : IUserRepository
             "UPDATE Users SET IsActive=@IsActive WHERE Id=@Id",
             new { Id = id, IsActive = isActive });
     }
+
+    public async Task ResetPasswordAsync(int id, string newHash)
+    {
+        using var conn = _factory.CreateConnection();
+        await conn.ExecuteAsync(
+            "UPDATE Users SET PasswordHash=@Hash WHERE Id=@Id",
+            new { Id = id, Hash = newHash });
+    }
 }
