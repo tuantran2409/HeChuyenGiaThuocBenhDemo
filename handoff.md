@@ -30,12 +30,13 @@ This is a university Software Engineering project (CNPM) requiring full SDLC art
 
 ## Current State
 
-**Active branch:** `feature/sprint4-reports` (pushed, PR open → develop)
+**Active branch:** `feature/sprint5-tests` (pushed, PR open → develop)
 
 **Sprint 1 — COMPLETE** ✅ (branch `feature/sprint1-setup`, pushed, PR open → develop)
 **Sprint 2 — COMPLETE** ✅ (branch `feature/sprint2-inference`, pushed, PR open → develop)
 **Sprint 3 — COMPLETE** ✅ (branch `feature/sprint3-admin-patient`, pushed, PR open → develop)
 **Sprint 4 — COMPLETE** ✅ (branch `feature/sprint4-reports`, pushed, PR open → develop)
+**Sprint 5 — COMPLETE** ✅ (branch `feature/sprint5-tests`, pushed, PR open → develop)
 
 ### Solution structure
 
@@ -305,22 +306,41 @@ dotnet run --project src/HeChuyenGiaThuocBenh.UI
 
 ---
 
-## Not Yet Done (Sprint 5)
+## ALL SPRINTS COMPLETE ✅
 
-- [ ] Sprint 5: Unit tests for InferenceService, AuthService
-- [ ] Sprint 5: Integration tests (real DB — symptom → diagnosis → drug flow)
-- [ ] Sprint 5: 20+ manual UI test cases documented
-- [ ] Deployment (Docker + SQL Server container, or Azure)
+All 5 sprints delivered. Remaining work: merge PRs to develop → main, record demo video, submit report.
+
+### Sprint 5 — what was built
+
+**Unit Tests (21 passing, no DB needed):**
+- `InferenceServiceTests` (9 tests) — forward chaining: mandatory check, confidence threshold (40%), ordering desc, drug/interaction association — fake repos
+- `AuthServiceTests` (10 tests) — login/wrong password/inactive user, register dup/new, hash+verify round-trip, salt randomness — `FakeUserRepository`
+- `Fakes/` — `FakeBenhRepository`, `FakeThuocRepository`, `FakeTuongTacThuocRepository`, `FakeUserRepository` (all interfaces, in-memory)
+- `BCrypt.Net-Next` added directly to Tests.Unit.csproj
+
+**Integration Tests (require live DB + seed data):**
+- `InferenceIntegrationTests` (7 tests) — Cảm cúm, Tiêu chảy cấp, Viêm họng dual-mandatory, empty input, drug associations, ordering
+- `RepositoryIntegrationTests` (11 tests) — smoke tests for BenhRepository (GetAll, GetById, GetByTrieuChung, GetBenhTrieuChung), ThuocRepository (GetAll 100+, GetById, Search "para", GetByBenhId), UserRepository (admin exists, 4 seed users), TrieuChungRepository (50+ symptoms)
+- `appsettings.json` in Integration project — connection string for test runner
+
+**Docs:**
+- `docs/test-cases.md` — 30 manual UI test cases (TC-01 to TC-30) covering auth, diagnosis, drug lookup, patient CRUD, admin forms, reports, permissions
+- `docs/user-guide.md` — end-user manual (install, DB setup, all features, security notes)
+- `docs/technical-guide.md` — architecture diagram, DB schema, inference algorithm, DI pattern, QuestPDF/LiveCharts usage, deploy guide
+
+**Deployment:**
+- `docker-compose.yml` — SQL Server 2022 Express container, port 1433, SA password `HcGtb@2024!`, named volume
+- `publish.ps1` — `dotnet publish` win-x64 self-contained single-file EXE → `publish/win-x64/`
 
 ---
 
 ## Next Step
 
-**Start Sprint 5:** Create `feature/sprint5-tests` branch off `develop` (after Sprint 4 PR merges), build:
-1. Unit tests — `InferenceService` (forward chaining logic), `AuthService` (BCrypt verify)
-2. Integration tests — full flow: symptom input → inference → drug recommendations (real DB)
-3. 20+ manual UI test cases (`docs/test-cases.md`)
-4. `dotnet publish` packaging + deployment (Docker + SQL Server or VPS)
+**Finalize delivery:**
+1. Merge all sprint PRs (1→2→3→4→5) into `develop`, then `develop` → `main`
+2. Record 5-15 min demo video (login → diagnosis → patient → admin → reports → PDF)
+3. Write 25-40 page report (5 chapters)
+4. Submit GitHub repo + Jira + Figma + UML + report + video
 
 ---
 
@@ -328,11 +348,12 @@ dotnet run --project src/HeChuyenGiaThuocBenh.UI
 
 ```
 main                          ← initial commit only
-develop                       ← initial commit only (Sprint 1+2+3+4 PRs pending merge)
+develop                       ← initial commit only (Sprint 1-5 PRs pending merge)
 feature/sprint1-setup         ← Sprint 1 complete, pushed, PR open → develop
 feature/sprint2-inference     ← Sprint 2 complete, pushed, PR open → develop
 feature/sprint3-admin-patient ← Sprint 3 complete, pushed, PR open → develop
-feature/sprint4-reports       ← Sprint 4 complete, pushed, PR open → develop (HEAD)
+feature/sprint4-reports       ← Sprint 4 complete, pushed, PR open → develop
+feature/sprint5-tests         ← Sprint 5 complete, pushed, PR open → develop (HEAD)
 ```
 
 **PRs open (create via GitHub UI):**
@@ -340,5 +361,6 @@ feature/sprint4-reports       ← Sprint 4 complete, pushed, PR open → develop
 - Sprint 2: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint2-inference
 - Sprint 3: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint3-admin-patient
 - Sprint 4: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint4-reports
+- Sprint 5: https://github.com/tuantran2409/HeChuyenGiaThuocBenhDemo/compare/develop...feature/sprint5-tests
 
 **`gh` CLI:** installed at `C:\Program Files\GitHub CLI\gh.exe` but needs `gh auth login` before `gh pr create` works.
