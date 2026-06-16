@@ -32,4 +32,5 @@ public static class ServiceContainer
     public static IBenhNhanRepository BenhNhanRepository => new BenhNhanRepository(_factory!);
     public static ILichSuChanDoanRepository LichSuChanDoanRepository => new LichSuChanDoanRepository(_factory!);
     public static ITuongTacThuocRepository TuongTacThuocRepository => new TuongTacThuocRepository(_factory!);
+    public static IBaoCaoService BaoCaoService => new BaoCaoService(new LichSuChanDoanRepository(_factory!));
 }

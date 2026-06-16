@@ -81,4 +81,30 @@ public class BenhRepository : IBenhRepository
         using var conn = _factory.CreateConnection();
         await conn.ExecuteAsync("UPDATE Benh SET IsActive=0 WHERE Id=@Id", new { Id = id });
     }
+
+    public async Task SaveBenhTrieuChungAsync(int benhId, IEnumerable<BenhTrieuChung> rules)
+    {
+        using var conn = _factory.CreateConnection();
+        conn.Open();
+        using var tx = conn.BeginTransaction();
+        try
+        {
+            await conn.ExecuteAsync(
+                "DELETE FROM BenhTrieuChung WHERE BenhId=@BenhId",
+                new { BenhId = benhId }, tx);
+            foreach (var r in rules)
+            {
+                await conn.ExecuteAsync(@"
+                    INSERT INTO BenhTrieuChung (BenhId, TrieuChungId, TrongSo, BatBuoc)
+                    VALUES (@BenhId, @TrieuChungId, @TrongSo, @BatBuoc)",
+                    new { BenhId = benhId, r.TrieuChungId, r.TrongSo, r.BatBuoc }, tx);
+            }
+            tx.Commit();
+        }
+        catch
+        {
+            tx.Rollback();
+            throw;
+        }
+    }
 }
