@@ -40,16 +40,33 @@ public partial class MainForm : Form
         Close();
     }
 
-    // Placeholder handlers — các form sẽ được thêm ở Sprint 2-4
-    private void btnChanDoan_Click(object sender, EventArgs e)
-        => MessageBox.Show("Chức năng chẩn đoán — Sprint 2", "Thông báo");
+    private void ShowContentForm(Form form)
+    {
+        foreach (Control ctrl in pnlContent.Controls)
+        {
+            if (ctrl is Form f) { f.Hide(); f.Dispose(); }
+            else ctrl.Dispose();
+        }
+        pnlContent.Controls.Clear();
 
+        form.TopLevel = false;
+        form.FormBorderStyle = FormBorderStyle.None;
+        form.Dock = DockStyle.Fill;
+        pnlContent.Controls.Add(form);
+        form.Show();
+    }
+
+    private void btnChanDoan_Click(object sender, EventArgs e)
+        => ShowContentForm(new ChanDoanForm());
+
+    private void btnThuoc_Click(object sender, EventArgs e)
+        => ShowContentForm(new ThuocForm());
+
+    // Sprint 3
     private void btnBenhNhan_Click(object sender, EventArgs e)
         => MessageBox.Show("Chức năng hồ sơ bệnh nhân — Sprint 3", "Thông báo");
 
-    private void btnThuoc_Click(object sender, EventArgs e)
-        => MessageBox.Show("Chức năng tra cứu thuốc — Sprint 2", "Thông báo");
-
+    // Sprint 4
     private void btnBaoCao_Click(object sender, EventArgs e)
         => MessageBox.Show("Chức năng báo cáo — Sprint 4", "Thông báo");
 
