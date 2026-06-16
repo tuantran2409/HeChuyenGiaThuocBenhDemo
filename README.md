@@ -1,0 +1,2 @@
+# HeChuyenGiaThuocBenhDemo
+CNPM
