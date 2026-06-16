@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/HeChuyenGiaThuocBenh.BLL/HeChuyenGiaThuocBenh.BLL.csproj" />
+    <Project Path="src/HeChuyenGiaThuocBenh.DAL/HeChuyenGiaThuocBenh.DAL.csproj" />
+    <Project Path="src/HeChuyenGiaThuocBenh.Models/HeChuyenGiaThuocBenh.Models.csproj" />
+    <Project Path="src/HeChuyenGiaThuocBenh.UI/HeChuyenGiaThuocBenh.UI.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/HeChuyenGiaThuocBenh.Tests.Integration/HeChuyenGiaThuocBenh.Tests.Integration.csproj" />
+    <Project Path="tests/HeChuyenGiaThuocBenh.Tests.Unit/HeChuyenGiaThuocBenh.Tests.Unit.csproj" />
+  </Folder>
+</Solution>
