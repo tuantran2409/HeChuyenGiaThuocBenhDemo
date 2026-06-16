@@ -62,9 +62,8 @@ public partial class MainForm : Form
     private void btnThuoc_Click(object sender, EventArgs e)
         => ShowContentForm(new ThuocForm());
 
-    // Sprint 3
     private void btnBenhNhan_Click(object sender, EventArgs e)
-        => MessageBox.Show("Chức năng hồ sơ bệnh nhân — Sprint 3", "Thông báo");
+        => ShowContentForm(new BenhNhanForm());
 
     // Sprint 4
     private void btnBaoCao_Click(object sender, EventArgs e)
@@ -74,8 +73,8 @@ public partial class MainForm : Form
         => MessageBox.Show("Quản lý người dùng — Sprint 4", "Thông báo");
 
     private void btnAdminDrugs_Click(object sender, EventArgs e)
-        => MessageBox.Show("Quản lý thuốc — Sprint 3", "Thông báo");
+        => ShowContentForm(new AdminThuocForm());
 
     private void btnAdminDiseases_Click(object sender, EventArgs e)
-        => MessageBox.Show("Quản lý bệnh — Sprint 3", "Thông báo");
+        => ShowContentForm(new AdminBenhForm());
 }
