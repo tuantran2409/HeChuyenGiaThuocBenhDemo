@@ -11,10 +11,10 @@ GO
 -- Plain text for dev: admin/Admin@123, bacsi1/BacSi@123, duocsi1/DuocSi@123
 -- ============================================================
 INSERT INTO Users (Username, PasswordHash, HoTen, Email, Role) VALUES
-('admin',   '$2a$11$rBnNFRn7mQOBCX7T1ZkYUuJXjGS6q1kZ5Uf9Qk2mBnN1234567890a', N'Quản trị viên',  'admin@hcgtb.com',   1),
-('bacsi1',  '$2a$11$rBnNFRn7mQOBCX7T1ZkYUuJXjGS6q1kZ5Uf9Qk2mBnN1234567890b', N'BS. Nguyễn Văn A', 'bacsi1@hcgtb.com',  2),
-('bacsi2',  '$2a$11$rBnNFRn7mQOBCX7T1ZkYUuJXjGS6q1kZ5Uf9Qk2mBnN1234567890c', N'BS. Trần Thị B',   'bacsi2@hcgtb.com',  2),
-('duocsi1', '$2a$11$rBnNFRn7mQOBCX7T1ZkYUuJXjGS6q1kZ5Uf9Qk2mBnN1234567890d', N'DS. Lê Văn C',     'duocsi1@hcgtb.com', 3);
+('admin',   '$2a$11$JyPTfL8522iSDQt9DUclbeVouP/Kq7QHALFPDF3gpRETmZX8JfOJa', N'Quản trị viên',  'admin@hcgtb.com',   1),
+('bacsi1',  '$2a$11$GNmk1s5lARqK2v2.rI3kM.YHzmm5HFKxTkqMNGytm3bpg46mfJtwG', N'BS. Nguyễn Văn A', 'bacsi1@hcgtb.com',  2),
+('bacsi2',  '$2a$11$GNmk1s5lARqK2v2.rI3kM.YHzmm5HFKxTkqMNGytm3bpg46mfJtwG', N'BS. Trần Thị B',   'bacsi2@hcgtb.com',  2),
+('duocsi1', '$2a$11$.pIyMluL.OWYq8WZOj9lI.z5BN2D/OfLFdCDH.ZYPSSQO58P7IT1a', N'DS. Lê Văn C',     'duocsi1@hcgtb.com', 3);
 GO
 
 -- NOTE: PasswordHash above are placeholders. Run this to generate real hashes:
