@@ -10,20 +10,33 @@ public partial class ChanDoanForm : Form
     private List<TrieuChung> _allTrieuChung = new();
     private List<TrieuChung> _displayedTrieuChung = new();
     private List<ChanDoanResult> _ketQua = new();
+    private List<BenhNhan> _patients = new();
 
     public ChanDoanForm()
     {
         InitializeComponent();
         _inferenceService = ServiceContainer.InferenceService;
-        _ = LoadTrieuChungAsync();
+        _ = LoadDataAsync();
     }
 
-    private async Task LoadTrieuChungAsync()
+    private async Task LoadDataAsync()
     {
         try
         {
-            lblStatus.Text = "Đang tải danh sách triệu chứng...";
-            _allTrieuChung = (await ServiceContainer.TrieuChungRepository.GetAllAsync()).ToList();
+            lblStatus.Text = "Đang tải dữ liệu...";
+            var tcTask = ServiceContainer.TrieuChungRepository.GetAllAsync();
+            var bnTask = ServiceContainer.BenhNhanRepository.GetAllAsync();
+            await Task.WhenAll(tcTask, bnTask);
+
+            _allTrieuChung = (await tcTask).ToList();
+            _patients = (await bnTask).OrderBy(p => p.HoTen).ToList();
+
+            cmbBenhNhan.Items.Clear();
+            cmbBenhNhan.Items.Add("-- Không lưu lịch sử --");
+            foreach (var bn in _patients)
+                cmbBenhNhan.Items.Add($"{bn.HoTen}" + (bn.SoDienThoai != null ? $" ({bn.SoDienThoai})" : ""));
+            cmbBenhNhan.SelectedIndex = 0;
+
             FilterAndDisplay(string.Empty);
             lblStatus.Text = $"Tải {_allTrieuChung.Count} triệu chứng thành công.";
         }
@@ -135,6 +148,28 @@ public partial class ChanDoanForm : Form
             dgvKetQua.ClearSelection();
             dgvKetQua.Rows[0].Selected = true;
             ShowDetail(_ketQua[0]);
+
+            if (cmbBenhNhan.SelectedIndex > 0)
+            {
+                var patient = _patients[cmbBenhNhan.SelectedIndex - 1];
+                var tcNames = _allTrieuChung
+                    .Where(t => selectedIds.Contains(t.Id))
+                    .Select(t => t.Ten);
+                var topResult = _ketQua[0];
+                var lichSu = new LichSuChanDoan
+                {
+                    BenhNhanId = patient.Id,
+                    UserId = AppSession.CurrentUser!.Id,
+                    NgayChanDoan = DateTime.Now,
+                    TrieuChungInput = string.Join(", ", tcNames),
+                    KetQuaBenh = string.Join("; ", _ketQua.Take(3).Select(r => $"{r.Benh.Ten} ({r.DoTinCay:P0})")),
+                    ThuocGoiY = topResult.ThuocGoiY.Count > 0
+                        ? string.Join(", ", topResult.ThuocGoiY.Select(t => t.Ten))
+                        : null,
+                };
+                await ServiceContainer.LichSuChanDoanRepository.CreateAsync(lichSu);
+                lblStatus.Text += "  ✓ Đã lưu lịch sử.";
+            }
         }
         catch (Exception ex)
         {
