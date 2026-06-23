@@ -28,3 +28,13 @@ BEGIN
     PRINT 'TuongTacThuoc already has data - skipped.';
 END
 GO
+
+-- Fix BenhTrieuChung: over-strict mandatory flags causing diagnosis to return no results.
+-- Cảm cúm  (BenhId=1): Ho (TrieuChungId=7) was mandatory - patients often lack cough early.
+-- Viêm họng (BenhId=3): Viêm họng symptom (Id=14) same name as disease - confusing as mandatory.
+-- Viêm phổi (BenhId=4): Khó thở (Id=9) removed from mandatory - 3 mandatory was too strict.
+UPDATE BenhTrieuChung SET BatBuoc=0 WHERE BenhId=1 AND TrieuChungId=7;
+UPDATE BenhTrieuChung SET BatBuoc=0 WHERE BenhId=3 AND TrieuChungId=14;
+UPDATE BenhTrieuChung SET BatBuoc=0 WHERE BenhId=4 AND TrieuChungId=9;
+PRINT 'BenhTrieuChung: mandatory flags updated.';
+GO

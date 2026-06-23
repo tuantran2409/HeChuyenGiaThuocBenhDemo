@@ -198,7 +198,7 @@ INSERT INTO BenhTrieuChung VALUES (1, 1, 2.0, 1),  -- Sốt - bắt buộc
                                    (1, 3, 1.5, 0),  -- Ớn lạnh
                                    (1, 4, 1.5, 0),  -- Mệt mỏi
                                    (1, 5, 1.0, 0),  -- Đau đầu
-                                   (1, 7, 2.0, 1),  -- Ho - bắt buộc
+                                   (1, 7, 2.0, 0),  -- Ho
                                    (1, 28, 1.5, 0), -- Đau cơ
                                    (1, 11, 1.0, 0); -- Chảy nước mũi
 
@@ -211,14 +211,14 @@ INSERT INTO BenhTrieuChung VALUES (2, 11, 2.0, 1), -- Chảy nước mũi - bắ
 
 -- Viêm họng (Id=3)
 INSERT INTO BenhTrieuChung VALUES (3, 13, 2.0, 1), -- Đau họng - bắt buộc
-                                   (3, 14, 2.0, 1), -- Viêm họng - bắt buộc
+                                   (3, 14, 2.0, 0), -- Viêm họng
                                    (3, 1, 1.0, 0),  -- Sốt
                                    (3, 48, 1.0, 0); -- Khàn giọng
 
 -- Viêm phổi (Id=4)
 INSERT INTO BenhTrieuChung VALUES (4, 2, 2.0, 1),  -- Sốt cao - bắt buộc
                                    (4, 8, 2.0, 1),  -- Ho có đờm - bắt buộc
-                                   (4, 9, 2.0, 1),  -- Khó thở - bắt buộc
+                                   (4, 9, 2.0, 0),  -- Khó thở
                                    (4, 10, 1.5, 0), -- Đau ngực
                                    (4, 4, 1.0, 0);  -- Mệt mỏi
 
