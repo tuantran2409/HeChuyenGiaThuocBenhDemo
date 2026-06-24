@@ -198,7 +198,7 @@ INSERT INTO BenhTrieuChung VALUES (1, 1, 2.0, 1),  -- Sốt - bắt buộc
                                    (1, 3, 1.5, 0),  -- Ớn lạnh
                                    (1, 4, 1.5, 0),  -- Mệt mỏi
                                    (1, 5, 1.0, 0),  -- Đau đầu
-                                   (1, 7, 2.0, 1),  -- Ho - bắt buộc
+                                   (1, 7, 2.0, 0),  -- Ho
                                    (1, 28, 1.5, 0), -- Đau cơ
                                    (1, 11, 1.0, 0); -- Chảy nước mũi
 
@@ -211,14 +211,14 @@ INSERT INTO BenhTrieuChung VALUES (2, 11, 2.0, 1), -- Chảy nước mũi - bắ
 
 -- Viêm họng (Id=3)
 INSERT INTO BenhTrieuChung VALUES (3, 13, 2.0, 1), -- Đau họng - bắt buộc
-                                   (3, 14, 2.0, 1), -- Viêm họng - bắt buộc
+                                   (3, 14, 2.0, 0), -- Viêm họng
                                    (3, 1, 1.0, 0),  -- Sốt
                                    (3, 48, 1.0, 0); -- Khàn giọng
 
 -- Viêm phổi (Id=4)
 INSERT INTO BenhTrieuChung VALUES (4, 2, 2.0, 1),  -- Sốt cao - bắt buộc
                                    (4, 8, 2.0, 1),  -- Ho có đờm - bắt buộc
-                                   (4, 9, 2.0, 1),  -- Khó thở - bắt buộc
+                                   (4, 9, 2.0, 0),  -- Khó thở
                                    (4, 10, 1.5, 0), -- Đau ngực
                                    (4, 4, 1.0, 0);  -- Mệt mỏi
 
@@ -322,18 +322,18 @@ GO
 -- TUONG TAC THUOC (Drug Interactions)
 -- ============================================================
 INSERT INTO TuongTacThuoc (ThuocId1, ThuocId2, MucDo, MoTa, HauQua) VALUES
-(3, 2, 3, N'Aspirin + Ibuprofen', N'Tăng nguy cơ xuất huyết tiêu hóa, giảm hiệu quả chống kết tập tiểu cầu của Aspirin'),
+(2, 3, 3, N'Ibuprofen + Aspirin', N'Tăng nguy cơ xuất huyết tiêu hóa, giảm hiệu quả chống kết tập tiểu cầu của Aspirin'),
 (3, 4, 2, N'Aspirin + Diclofenac', N'Tăng tác dụng phụ tiêu hóa, nguy cơ xuất huyết'),
 (8, 11, 2, N'Ciprofloxacin + Metronidazole', N'Tăng nguy cơ tác dụng phụ thần kinh'),
 (13, 14, 1, N'Omeprazole + Pantoprazole', N'Không nên dùng 2 PPI cùng lúc, không có lợi thêm'),
-(31, 32, 2, N'Metformin + Glipizide', N'Tăng nguy cơ hạ đường huyết, cần theo dõi chặt'),
 (27, 28, 1, N'Amlodipine + Enalapril', N'Hạ huyết áp cộng thêm - cần điều chỉnh liều'),
-(38, 36, 2, N'Diazepam + Fluoxetine', N'Tăng tác dụng an thần của Diazepam'),
+(31, 32, 2, N'Metformin + Glipizide', N'Tăng nguy cơ hạ đường huyết, cần theo dõi chặt'),
+(36, 38, 2, N'Fluoxetine + Diazepam', N'Tăng tác dụng an thần của Diazepam'),
 (2, 31, 2, N'Ibuprofen + Metformin', N'NSAIDs có thể làm giảm tác dụng của Metformin, tăng nguy cơ suy thận'),
 (30, 31, 1, N'Metoprolol + Metformin', N'Metoprolol che lấp triệu chứng hạ đường huyết'),
 (29, 31, 1, N'Atorvastatin + Metformin', N'Atorvastatin có thể tăng nhẹ đường huyết'),
 (7, 12, 1, N'Azithromycin + Clarithromycin', N'Không dùng 2 Macrolide cùng lúc, không tăng hiệu quả'),
-(9, 8, 2, N'Doxycycline + Ciprofloxacin', N'Tương tác kháng khuẩn, không nên phối hợp thường quy');
+(8, 9, 2, N'Ciprofloxacin + Doxycycline', N'Tương tác kháng khuẩn, không nên phối hợp thường quy');
 GO
 
 -- ============================================================

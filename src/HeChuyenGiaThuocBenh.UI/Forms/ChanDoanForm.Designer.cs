@@ -19,6 +19,9 @@ partial class ChanDoanForm
         // Left panel
         pnlLeft         = new Panel();
         lblLeftTitle    = new Label();
+        pnlBenhNhan     = new Panel();
+        lblBenhNhanTitle= new Label();
+        cmbBenhNhan     = new ComboBox();
         pnlSearch       = new Panel();
         txtSearch       = new TextBox();
         clbTrieuChung   = new CheckedListBox();
@@ -77,6 +80,7 @@ partial class ChanDoanForm
         ((System.ComponentModel.ISupportInitialize)dgvCanhBao).BeginInit();
 
         pnlLeft.SuspendLayout();
+        pnlBenhNhan.SuspendLayout();
         pnlSearch.SuspendLayout();
         pnlLeftBottom.SuspendLayout();
         pnlButtons.SuspendLayout();
@@ -108,7 +112,8 @@ partial class ChanDoanForm
         pnlLeft.Controls.Add(pnlButtons);         // Bottom (above status)
         pnlLeft.Controls.Add(lblSelectedCount);   // Bottom (above buttons)
         pnlLeft.Controls.Add(clbTrieuChung);      // Fill
-        pnlLeft.Controls.Add(pnlSearch);          // Top (below title)
+        pnlLeft.Controls.Add(pnlSearch);          // Top (below patient)
+        pnlLeft.Controls.Add(pnlBenhNhan);        // Top (below title)
         pnlLeft.Controls.Add(lblLeftTitle);       // Top (very top)
 
         lblLeftTitle.Dock = DockStyle.Top;
@@ -117,6 +122,23 @@ partial class ChanDoanForm
         lblLeftTitle.ForeColor = Color.FromArgb(40, 44, 52);
         lblLeftTitle.Padding = new Padding(10, 8, 0, 0);
         lblLeftTitle.Text = "CHỌN TRIỆU CHỨNG";
+
+        pnlBenhNhan.Dock = DockStyle.Top;
+        pnlBenhNhan.Height = 48;
+        pnlBenhNhan.Padding = new Padding(8, 4, 8, 4);
+        pnlBenhNhan.BackColor = Color.FromArgb(240, 244, 255);
+        pnlBenhNhan.Controls.Add(cmbBenhNhan);
+        pnlBenhNhan.Controls.Add(lblBenhNhanTitle);
+
+        lblBenhNhanTitle.Dock = DockStyle.Top;
+        lblBenhNhanTitle.Height = 17;
+        lblBenhNhanTitle.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+        lblBenhNhanTitle.ForeColor = Color.FromArgb(60, 80, 130);
+        lblBenhNhanTitle.Text = "Bệnh nhân:";
+
+        cmbBenhNhan.Dock = DockStyle.Fill;
+        cmbBenhNhan.Font = new Font("Segoe UI", 9F);
+        cmbBenhNhan.DropDownStyle = ComboBoxStyle.DropDownList;
 
         pnlSearch.Dock = DockStyle.Top;
         pnlSearch.Height = 38;
@@ -403,6 +425,7 @@ partial class ChanDoanForm
         ((System.ComponentModel.ISupportInitialize)dgvCanhBao).EndInit();
 
         pnlLeft.ResumeLayout(false);
+        pnlBenhNhan.ResumeLayout(false);
         pnlSearch.ResumeLayout(false);
         pnlSearch.PerformLayout();
         pnlLeftBottom.ResumeLayout(false);
@@ -433,6 +456,9 @@ partial class ChanDoanForm
     private SplitContainer scRight;
     private Panel pnlLeft;
     private Label lblLeftTitle;
+    private Panel pnlBenhNhan;
+    private Label lblBenhNhanTitle;
+    private ComboBox cmbBenhNhan;
     private Panel pnlSearch;
     private TextBox txtSearch;
     private CheckedListBox clbTrieuChung;

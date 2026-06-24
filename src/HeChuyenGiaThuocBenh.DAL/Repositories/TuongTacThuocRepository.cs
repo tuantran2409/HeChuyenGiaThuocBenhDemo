@@ -36,10 +36,16 @@ public class TuongTacThuocRepository : ITuongTacThuocRepository
         if (idList.Count < 2) return [];
 
         using var conn = _factory.CreateConnection();
-        return await conn.QueryAsync<TuongTacThuoc>(@"
-            SELECT * FROM TuongTacThuoc
-            WHERE ThuocId1 IN @Ids AND ThuocId2 IN @Ids
-            ORDER BY MucDo DESC",
-            new { Ids = idList });
+        var rows = await conn.QueryAsync<TuongTacThuoc, Thuoc, Thuoc, TuongTacThuoc>(@"
+            SELECT tt.*, t1.*, t2.*
+            FROM TuongTacThuoc tt
+            INNER JOIN Thuoc t1 ON t1.Id = tt.ThuocId1
+            INNER JOIN Thuoc t2 ON t2.Id = tt.ThuocId2
+            WHERE tt.ThuocId1 IN @Ids AND tt.ThuocId2 IN @Ids
+            ORDER BY tt.MucDo DESC",
+            (tt, t1, t2) => { tt.Thuoc1 = t1; tt.Thuoc2 = t2; return tt; },
+            new { Ids = idList },
+            splitOn: "Id,Id");
+        return rows;
     }
 }
